@@ -2,20 +2,11 @@ pipeline {
     agent any
 
     stages {
-        stage('Build') {
+        stage('Download Bundle') {
             steps {
-                echo 'Building..'
+                
+				sh "python apigeecicd.py --planet_name saas --action_name download --artifact_type apis --artifact_name ${env.JOB_NAME} --mgmt_username icicibank-apigee@freshgravity.com --mgmt_password Fresh@1234 --branch_name develop
             }
-        }
-        stage('Test') {
-            steps {
-                echo 'Testing..'
-            }
-        }
-        stage('Deploy') {
-            steps {
-                echo 'Deploying....'
-            }
-        }
+        }        
     }
 }
