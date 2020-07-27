@@ -1,0 +1,11 @@
+edge_config_data:
+  saas:
+    mgmt_url: https://api.enterprise.apigee.com
+    branch:
+      - develop:
+          mvn_profile: test
+          source_org: icici-nonprod
+          source_env: dev
+          target_org: icici-nonprod
+          target_env: uat
+  hybrid:
