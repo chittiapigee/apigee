@@ -2,6 +2,13 @@ pipeline {
     agent any
 
     stages {
+		stage('Python setup'){
+		
+			steps{
+				sh "pip install requests"
+				sh "pip install PyYAML"
+			}
+		}
         stage('Download Bundle') {
             steps {
                 
