@@ -52,7 +52,7 @@ def download_artifact(artifact_type, artifact_name, mgmt_username, mgmt_password
             env_name=branch['develop']['source_env']
 
     revision_num = get_highest_revnum(mgmt_url,mgmt_username,mgmt_password,org_name,env_name,artifact_type,artifact_name)
-    if revision_num !=0:
+    if revision_num != None and revision_num !=0:
         print('Downloading bundle for '+artifact_name+' --> '+revision_num)
         rev_url = mgmt_url+'/v1/organizations/'+org_name+'/'+artifact_type+'/'+artifact_name+'/revisions/'+revision_num
         params = {'format':'bundle'}
@@ -68,6 +68,8 @@ def download_artifact(artifact_type, artifact_name, mgmt_username, mgmt_password
             with open(bundle_name, 'wb') as bundle_zip:
                 bundle_zip.write(response.content)
                 bundle_zip.close()
+    else:
+        print('No revisions found for proxy: '+artifact_name+", Hence can't download")
 
 
 def deploy_artifact(artifact_name, mgmt_username, mgmt_password, branch_name, planet_config):
