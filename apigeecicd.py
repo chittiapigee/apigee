@@ -37,6 +37,8 @@ def get_highest_revnum(mgmt_url, mgmt_username, mgmt_password, org_name, env_nam
             return max(rev_array)
         else:
             return 0
+    else:
+        print("revision call failed with code "+str(response.status_code)+", message: "+response.text);
 
 
 
@@ -86,29 +88,32 @@ def deploy_artifact(artifact_name, mgmt_username, mgmt_password, branch_name, pl
             mvn_profile = branch['develop']['mvn_profile']
 
     zip_file_name = os.getcwd()+os.sep+artifact_name+'.zip'
-    with ZipFile(zip_file_name,'r') as zip:
-        zip.extractall(os.getcwd()+os.sep+artifact_name)
+    if os.path.exists(zip_file_name):
+        with ZipFile(zip_file_name,'r') as zip:
+            zip.extractall(os.getcwd()+os.sep+artifact_name)
 
-    #change pom xml with proxy name
-    datafile = os.getcwd()+os.sep+'pom.xml'
+        #change pom xml with proxy name
+        datafile = os.getcwd()+os.sep+'pom.xml'
 
-    new_lines = []
-    with open(datafile, 'r') as f:
-        for line in f.readlines():
-            if 'edge-bundle' in line:
-                line = line.replace('edge-bundle',artifact_name)
-            new_lines.append(line)
+        new_lines = []
+        with open(datafile, 'r') as f:
+            for line in f.readlines():
+                if 'edge-bundle' in line:
+                    line = line.replace('edge-bundle',artifact_name)
+                new_lines.append(line)
 
-        outfile = os.getcwd()+os.sep+artifact_name+os.sep+'pom.xml'
+            outfile = os.getcwd()+os.sep+artifact_name+os.sep+'pom.xml'
 
-        with open(outfile, 'w') as of:
-            of.writelines(new_lines)
+            with open(outfile, 'w') as of:
+                of.writelines(new_lines)
 
-    # invoke deployment
-    os.chdir(os.getcwd()+os.sep+artifact_name)
+        # invoke deployment
+        os.chdir(os.getcwd()+os.sep+artifact_name)
 
-    mvn_command = 'mvn install -P '+mvn_profile+' -Dprofile='+env_name+' -Dorgname='+org_name+' -Denv='+env_name+' -Dmgmturl='+mgmt_url+' -Dusername='+mgmt_username+' -Dpassword='+mgmt_password+' -Doptions=override -Ddelay=10'
-    os.system(mvn_command)
+        mvn_command = 'mvn install -P '+mvn_profile+' -Dprofile='+env_name+' -Dorgname='+org_name+' -Denv='+env_name+' -Dmgmturl='+mgmt_url+' -Dusername='+mgmt_username+' -Dpassword='+mgmt_password+' -Doptions=override -Ddelay=10'
+        os.system(mvn_command)
+    else:
+        print("Artifact "+artifact_name+".zip doesn't exist, hence cannot deploy")
 
 
 def main():
