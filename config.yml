@@ -4,8 +4,8 @@ edge_config_data:
     branch:
       - develop:
           mvn_profile: test
-          source_org: icici-nonprod
-          source_env: dev
-          target_org: icici-nonprod
-          target_env: uat
+          source_org: brahmajichittibonu-eval
+          source_env: test
+          target_org: brahmajichittibonu-eval
+          target_env: prod
   hybrid:
